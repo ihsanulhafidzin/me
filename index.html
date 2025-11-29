@@ -55,42 +55,6 @@
         50% { opacity: 1; transform: scale(1.2); }
     }
 
-    /* Efek partikel hati */
-    .hearts {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-        z-index: 0;
-    }
-
-    .heart {
-        position: absolute;
-        font-size: 20px;
-        color: #ff4f8a;
-        opacity: 0;
-        animation: float 8s linear infinite;
-    }
-
-    @keyframes float {
-        0% {
-            transform: translateY(100vh) rotate(0deg);
-            opacity: 0;
-        }
-        10% {
-            opacity: 0.7;
-        }
-        90% {
-            opacity: 0.7;
-        }
-        100% {
-            transform: translateY(-100px) rotate(360deg);
-            opacity: 0;
-        }
-    }
-
     .container {
         display: flex;
         flex-direction: column;
@@ -182,24 +146,32 @@
         box-shadow: 0 12px 30px rgba(233, 30, 99, 0.6);
     }
 
-    .btn::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-        transition: 0.5s;
+    .music-section {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 20px;
+        margin: 20px 0;
+        text-align: center;
     }
 
-    .btn:hover::after, .btn:active::after {
-        left: 100%;
+    .music-btn {
+        background: linear-gradient(45deg, #4CAF50, #45a049);
+        margin: 5px;
     }
 
-    #nextBtn, #restartBtn {
-        display: none;
-        margin-top: 0;
+    .music-controls {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 15px;
+    }
+
+    .music-info {
+        font-size: 14px;
+        color: #ffb3c6;
+        margin-top: 10px;
+        font-style: italic;
     }
 
     .page-content {
@@ -214,59 +186,6 @@
         overflow-wrap: break-word;
         word-wrap: break-word;
         hyphens: auto;
-    }
-
-    .music-control {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 50%;
-        width: clamp(50px, 12vw, 60px);
-        height: clamp(50px, 12vw, 60px);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
-        z-index: 10;
-        backdrop-filter: blur(10px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-        transition: all 0.3s ease;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        touch-action: manipulation;
-    }
-
-    .music-control:hover, .music-control:active {
-        transform: scale(1.1);
-        background: rgba(255, 255, 255, 0.15);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    }
-
-    .music-control i {
-        font-size: clamp(24px, 6vw, 28px);
-        color: #ff4f8a;
-    }
-
-    .music-notification {
-        position: fixed;
-        top: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: rgba(255, 255, 255, 0.15);
-        color: #ff4f8a;
-        padding: 12px 20px;
-        border-radius: 25px;
-        font-size: 14px;
-        backdrop-filter: blur(10px);
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
-        z-index: 100;
-        display: none;
-        animation: slideDown 0.5s ease;
-    }
-
-    @keyframes slideDown {
-        from { transform: translateX(-50%) translateY(-20px); opacity: 0; }
-        to { transform: translateX(-50%) translateY(0); opacity: 1; }
     }
 
     .progress-container {
@@ -294,7 +213,6 @@
         margin-bottom: 15px;
     }
 
-    /* Style untuk gambar penutup */
     .closing-image {
         max-width: min(300px, 80vw);
         max-height: min(300px, 80vw);
@@ -319,49 +237,12 @@
         line-height: 1.4;
     }
 
-    /* Responsif untuk landscape mobile */
     @media (max-height: 500px) and (orientation: landscape) {
-        body {
-            padding: 5px;
-        }
-        
-        .container {
-            padding: 5px;
-        }
-        
-        #startScreen, .page, #endScreen {
-            padding: 15px 10px;
-            margin-bottom: 10px;
-        }
-        
-        .page-content {
-            min-height: 120px;
-            margin-bottom: 10px;
-        }
-        
-        .title {
-            margin-bottom: 10px;
-        }
-        
-        .subtitle {
-            margin-bottom: 15px;
-        }
-        
-        .btn {
-            min-height: 40px;
-        }
-        
-        .closing-image {
-            max-width: 150px;
-            max-height: 150px;
-            margin: 10px 0;
-        }
-        
-        .music-notification {
-            top: 10px;
-            padding: 8px 15px;
-            font-size: 12px;
-        }
+        body { padding: 5px; }
+        .container { padding: 5px; }
+        #startScreen, .page, #endScreen { padding: 15px 10px; margin-bottom: 10px; }
+        .page-content { min-height: 120px; margin-bottom: 10px; }
+        .music-section { padding: 15px; margin: 10px 0; }
     }
 </style>
 </head>
@@ -370,26 +251,23 @@
 <!-- Efek bintang latar belakang -->
 <div class="stars" id="stars"></div>
 
-<!-- Efek partikel hati -->
-<div class="hearts" id="hearts"></div>
-
-<!-- Notifikasi musik -->
-<div class="music-notification" id="musicNotification">
-    🔔 Ketuk layar untuk memutar musik
-</div>
-
-<!-- 🔊 Audio Element untuk musik -->
-<audio id="bgMusic" loop preload="auto">
-    <!-- Fallback music source -->
-    <source src="https://assets.mixkit.co/music/preview/mixkit-romantic-serenade-667.mp3" type="audio/mpeg">
-    Browser Anda tidak mendukung elemen audio.
-</audio>
-
 <div class="container">
     <!-- 🟣 HALAMAN AWAL -->
     <div id="startScreen">
         <h1 class="title">Puisi Cinta</h1>
         <p class="subtitle">Sebuah perjalanan kata tentang cinta dan takdir</p>
+        
+        <!-- Section Musik -->
+        <div class="music-section">
+            <h3 style="color: #ffb3c6; margin-bottom: 15px;">🎵 Musik Latar</h3>
+            <div class="music-controls">
+                <button class="btn music-btn" onclick="initMusic('option1')">Musik 1 (Romantis)</button>
+                <button class="btn music-btn" onclick="initMusic('option2')">Musik 2 (Soft)</button>
+                <button class="btn music-btn" onclick="initMusic('option3')">Musik 3 (Instrumental)</button>
+            </div>
+            <p class="music-info">Pilih salah satu musik lalu tekan "Mulai Membaca"</p>
+        </div>
+        
         <button class="btn" onclick="startPoem()">Mulai Membaca</button>
     </div>
 
@@ -412,12 +290,22 @@
         <h2 class="title" style="font-size: clamp(1.8rem, 6vw, 2.5rem);">Terima Kasih</h2>
         <p class="closing-message">Untuk semua momen indah yang telah kita lewati bersama</p>
         
-        <!-- Ganti URL gambar di bawah ini dengan gambar yang Anda inginkan -->
-        <img src="ga.jpg" 
+        <img src="https://images.unsplash.com/photo-1516487106395-f3c55b3f4b1a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" 
              alt="Momen Indah" 
              class="closing-image">
         
         <p class="closing-message">Selalu ada untukmu, hari ini dan selamanya</p>
+        
+        <!-- Kontrol Musik di Akhir -->
+        <div class="music-section">
+            <h3 style="color: #ffb3c6; margin-bottom: 15px;">🎵 Kontrol Musik</h3>
+            <div class="music-controls">
+                <button class="btn music-btn" onclick="playMusic()">Putar</button>
+                <button class="btn music-btn" onclick="pauseMusic()">Jeda</button>
+                <button class="btn music-btn" onclick="stopMusic()">Stop</button>
+            </div>
+        </div>
+        
         <button class="btn" id="restartBtn" onclick="restartPoem()">Baca Lagi</button>
     </div>
 
@@ -429,11 +317,6 @@
 
     <!-- Tombol Lanjut di bawah -->
     <button id="nextBtn" class="btn" onclick="nextPage()">Lanjut</button>
-</div>
-
-<!-- Kontrol musik -->
-<div class="music-control" id="music-control">
-    <i>♪</i>
 </div>
 
 <script>
@@ -469,136 +352,145 @@ hatiku menemukan rumahnya.`
 let pageNow = 1;
 let charIndex = 0;
 let speed = 40;
-let isMusicPlaying = false;
-let musicInitialized = false;
+let currentAudio = null;
+let selectedMusic = null;
+
+// Multiple music options dengan sumber yang berbeda
+const musicOptions = {
+    option1: {
+        url: "https://assets.mixkit.co/music/preview/mixkit-romantic-serenade-667.mp3",
+        name: "Musik Romantis"
+    },
+    option2: {
+        url: "https://assets.mixkit.co/music/preview/mixkit-gently-romantic-667.mp3", 
+        name: "Musik Soft"
+    },
+    option3: {
+        url: "https://assets.mixkit.co/music/preview/mixkit-deep-urban-623.mp3",
+        name: "Musik Instrumental"
+    }
+};
 
 // ============================
-// ELEMEN AUDIO
+// FUNGSI MUSIK - MULTIPLE APPROACH
 // ============================
-const bgMusic = document.getElementById('bgMusic');
-const musicControl = document.getElementById('music-control');
-const musicNotification = document.getElementById('musicNotification');
 
-// ============================
-// INISIALISASI MUSIK
-// ============================
-function initializeMusic() {
-    if (musicInitialized) return;
+function initMusic(option) {
+    // Hentikan musik sebelumnya jika ada
+    if (currentAudio) {
+        currentAudio.pause();
+        currentAudio = null;
+    }
     
-    // Set volume
-    bgMusic.volume = 0.7;
+    selectedMusic = option;
+    const music = musicOptions[option];
     
-    // Event listeners untuk audio
-    bgMusic.addEventListener('loadeddata', function() {
-        console.log('Musik siap diputar');
+    // Approach 1: Buat audio element baru setiap kali
+    currentAudio = new Audio();
+    currentAudio.src = music.url;
+    currentAudio.loop = true;
+    currentAudio.volume = 0.7;
+    
+    // Preload metadata
+    currentAudio.preload = "metadata";
+    
+    console.log(`Musik dipilih: ${music.name}`);
+    
+    // Coba load musik
+    currentAudio.load();
+    
+    // Event listeners
+    currentAudio.addEventListener('canplaythrough', function() {
+        console.log(`Musik ${music.name} siap diputar`);
     });
     
-    bgMusic.addEventListener('error', function(e) {
+    currentAudio.addEventListener('error', function(e) {
         console.error('Error loading audio:', e);
-        showMusicNotification('❌ Musik tidak dapat dimuat');
+        alert('Maaf, musik tidak dapat dimuat. Silakan coba opsi musik lain.');
     });
     
-    bgMusic.addEventListener('canplaythrough', function() {
-        console.log('Musik dapat diputar sepenuhnya');
-    });
-    
-    musicInitialized = true;
+    // Coba play sekali untuk unlock (akan di-pause langsung)
+    const playPromise = currentAudio.play();
+    if (playPromise !== undefined) {
+        playPromise.then(() => {
+            console.log('Audio context unlocked');
+            currentAudio.pause();
+        }).catch(error => {
+            console.log('Audio play blocked, need user interaction');
+        });
+    }
 }
 
-// ============================
-// KONTROL MUSIK
-// ============================
-function toggleMusic() {
-    if (!musicInitialized) {
-        initializeMusic();
+function playMusic() {
+    if (!selectedMusic) {
+        alert('Silakan pilih musik terlebih dahulu');
+        return;
     }
     
-    if (isMusicPlaying) {
-        bgMusic.pause();
-        musicControl.innerHTML = '<i>♪</i>';
-        isMusicPlaying = false;
-    } else {
-        // Play music dengan user interaction
-        const playPromise = bgMusic.play();
-        
-        if (playPromise !== undefined) {
-            playPromise.then(() => {
-                // Musik berhasil diputar
-                musicControl.innerHTML = '<i>❚❚</i>';
-                isMusicPlaying = true;
-                hideMusicNotification();
-            }).catch(error => {
-                // Gagal memutar musik
-                console.error('Play failed:', error);
-                showMusicNotification('🔔 Ketuk layar untuk memutar musik');
-                musicControl.innerHTML = '<i>♪</i>';
-                isMusicPlaying = false;
+    if (!currentAudio) {
+        initMusic(selectedMusic);
+    }
+    
+    const playPromise = currentAudio.play();
+    
+    if (playPromise !== undefined) {
+        playPromise.then(() => {
+            console.log('Musik berhasil diputar');
+        }).catch(error => {
+            console.error('Gagal memutar musik:', error);
+            
+            // Fallback: Coba buat audio element baru
+            const music = musicOptions[selectedMusic];
+            const newAudio = new Audio(music.url);
+            newAudio.loop = true;
+            newAudio.volume = 0.7;
+            
+            newAudio.play().then(() => {
+                console.log('Musik berhasil diputar dengan fallback');
+                currentAudio = newAudio;
+            }).catch(fallbackError => {
+                console.error('Fallback juga gagal:', fallbackError);
+                alert('Tidak dapat memutar musik. Pastikan browser mengizinkan audio.');
             });
-        }
+        });
     }
 }
 
-function showMusicNotification(message) {
-    musicNotification.textContent = message;
-    musicNotification.style.display = 'block';
-    setTimeout(hideMusicNotification, 3000);
+function pauseMusic() {
+    if (currentAudio && !currentAudio.paused) {
+        currentAudio.pause();
+        console.log('Musik dijeda');
+    }
 }
 
-function hideMusicNotification() {
-    musicNotification.style.display = 'none';
+function stopMusic() {
+    if (currentAudio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+        console.log('Musik dihentikan');
+    }
 }
-
-// ============================
-// EVENT LISTENERS UNTUK MUSIK
-// ============================
-musicControl.addEventListener('click', toggleMusic);
-
-// Touch events untuk mobile
-musicControl.addEventListener('touchstart', function(e) {
-    e.preventDefault();
-    this.style.transform = 'scale(0.95)';
-});
-
-musicControl.addEventListener('touchend', function(e) {
-    e.preventDefault();
-    this.style.transform = 'scale(1.1)';
-    toggleMusic();
-});
-
-// User interaction untuk unlock audio
-document.addEventListener('click', function() {
-    if (!musicInitialized) {
-        initializeMusic();
-    }
-});
-
-document.addEventListener('touchstart', function() {
-    if (!musicInitialized) {
-        initializeMusic();
-    }
-});
 
 // ============================
 // FUNGSI PUISI
 // ============================
+
 function startPoem() {
+    if (!selectedMusic) {
+        if (confirm('Anda belum memilih musik. Ingin lanjut tanpa musik?')) {
+            document.getElementById("startScreen").style.display = "none";
+            updateProgress();
+            showPage(pageNow);
+        }
+        return;
+    }
+    
     document.getElementById("startScreen").style.display = "none";
     
-    // Initialize musik saat mulai puisi
-    initializeMusic();
-    
-    // Coba memutar musik otomatis (mungkin gagal di mobile)
-    try {
-        bgMusic.play().then(() => {
-            musicControl.innerHTML = '<i>❚❚</i>';
-            isMusicPlaying = true;
-        }).catch(error => {
-            console.log('Autoplay blocked, waiting for user interaction');
-            showMusicNotification('🔔 Ketuk ikon musik untuk memutar');
-        });
-    } catch (error) {
-        console.log('Autoplay not supported');
-    }
+    // Coba memutar musik setelah user interaction
+    setTimeout(() => {
+        playMusic();
+    }, 500);
     
     updateProgress();
     showPage(pageNow);
@@ -663,6 +555,7 @@ function updateProgress() {
 // ============================
 // INISIALISASI
 // ============================
+
 function createStars() {
     const starsContainer = document.getElementById('stars');
     const starCount = 150;
@@ -688,45 +581,21 @@ function createStars() {
     }
 }
 
-function createHearts() {
-    const heartsContainer = document.getElementById('hearts');
-    const heartCount = 10;
-    
-    for (let i = 0; i < heartCount; i++) {
-        const heart = document.createElement('div');
-        heart.classList.add('heart');
-        heart.innerHTML = '❤';
-        
-        const x = Math.random() * 100;
-        const delay = Math.random() * 6;
-        const duration = 5 + Math.random() * 3;
-        
-        heart.style.left = `${x}%`;
-        heart.style.animationDelay = `${delay}s`;
-        heart.style.animationDuration = `${duration}s`;
-        
-        heartsContainer.appendChild(heart);
-    }
-}
-
-// Initialize saat DOM ready
+// Initialize
 document.addEventListener('DOMContentLoaded', function() {
     createStars();
-    createHearts();
-    initializeMusic();
     
-    // Event untuk unlock audio context
-    document.body.addEventListener('click', function() {
-        if (bgMusic.paused && !isMusicPlaying) {
-            // Coba play musik saat user interaction pertama
-            bgMusic.play().then(() => {
-                bgMusic.pause();
-                musicControl.innerHTML = '<i>♪</i>';
-            }).catch(console.error);
-        }
+    // Unlock audio context dengan user interaction
+    document.addEventListener('click', function() {
+        console.log('User interaction detected - audio context unlocked');
     });
+    
+    // Pilih musik default
+    initMusic('option1');
 });
-</script>
 
-</body>
-</html>
+// Fallback: Coba buat audio saat halaman dimuat
+window.addEventListener('load', function() {
+    // Buat audio dummy untuk unlock context
+    const dummyAudio = new Audio();
+    dummyAudio.src = "data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUgBjiN1/LMeSwFJHfH8N2QQAoUXrTp
