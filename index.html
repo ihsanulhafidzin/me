@@ -247,28 +247,6 @@
         color: #ff4f8a;
     }
 
-    .music-notification {
-        position: fixed;
-        top: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: rgba(255, 255, 255, 0.15);
-        color: #ff4f8a;
-        padding: 12px 20px;
-        border-radius: 25px;
-        font-size: 14px;
-        backdrop-filter: blur(10px);
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
-        z-index: 100;
-        display: none;
-        animation: slideDown 0.5s ease;
-    }
-
-    @keyframes slideDown {
-        from { transform: translateX(-50%) translateY(-20px); opacity: 0; }
-        to { transform: translateX(-50%) translateY(0); opacity: 1; }
-    }
-
     .progress-container {
         width: 100%;
         max-width: 600px;
@@ -319,7 +297,22 @@
         line-height: 1.4;
     }
 
-    /* Responsif untuk landscape mobile */
+    /* Efek teks berkilau */
+    .shimmer {
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+        background-size: 200% 100%;
+        animation: shimmer 3s infinite;
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    @keyframes shimmer {
+        0% { background-position: -200% 0; }
+        100% { background-position: 200% 0; }
+    }
+
+    /* Optimasi untuk landscape mobile */
     @media (max-height: 500px) and (orientation: landscape) {
         body {
             padding: 5px;
@@ -356,12 +349,35 @@
             max-height: 150px;
             margin: 10px 0;
         }
-        
-        .music-notification {
-            top: 10px;
-            padding: 8px 15px;
-            font-size: 12px;
+    }
+
+    /* Optimasi untuk layar sangat kecil */
+    @media (max-width: 320px) {
+        #startScreen, .page, #endScreen {
+            padding: 20px 15px;
         }
+        
+        .page-content {
+            min-height: 150px;
+            padding: 10px;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            font-size: 16px;
+        }
+    }
+
+    /* Mencegah zoom pada input focus di iOS */
+    @media screen and (max-width: 768px) {
+        input, select, textarea {
+            font-size: 16px;
+        }
+    }
+
+    /* Optimasi performa untuk perangkat rendah */
+    .stars, .hearts {
+        will-change: transform, opacity;
     }
 </style>
 </head>
@@ -373,22 +389,20 @@
 <!-- Efek partikel hati -->
 <div class="hearts" id="hearts"></div>
 
-<!-- Notifikasi musik -->
-<div class="music-notification" id="musicNotification">
-    🔔 Ketuk layar untuk memutar musik
-</div>
-
-<!-- 🔊 Audio Element untuk musik -->
-<audio id="bgMusic" loop preload="auto">
-    <!-- Fallback music source -->
-    <source src="https://assets.mixkit.co/music/preview/mixkit-romantic-serenade-667.mp3" type="audio/mpeg">
-    Browser Anda tidak mendukung elemen audio.
-</audio>
+<!-- 🔊 SoundCloud Player — src di-set setelah tombol diklik -->
+<iframe
+  id="sound"
+  width="0"
+  height="0"
+  scrolling="no"
+  frameborder="no"
+  allow="autoplay">
+</iframe>
 
 <div class="container">
     <!-- 🟣 HALAMAN AWAL -->
     <div id="startScreen">
-        <h1 class="title">Puisi untuk Ratu Pesona Gadis Alban</h1>
+        <h1 class="title">Puisi Cinta</h1>
         <p class="subtitle">Sebuah perjalanan kata tentang cinta dan takdir</p>
         <button class="btn" onclick="startPoem()">Mulai Membaca</button>
     </div>
@@ -413,7 +427,7 @@
         <p class="closing-message">Untuk semua momen indah yang telah kita lewati bersama</p>
         
         <!-- Ganti URL gambar di bawah ini dengan gambar yang Anda inginkan -->
-        <img src="ga.jpg" 
+        <img src="https://images.unsplash.com/photo-1516487106395-f3c55b3f4b1a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" 
              alt="Momen Indah" 
              class="closing-image">
         
@@ -468,92 +482,82 @@ hatiku menemukan rumahnya.`
 
 let pageNow = 1;
 let charIndex = 0;
-let speed = 40;
-let isMusicPlaying = false;
-let musicInitialized = false;
+let speed = 40; // kecepatan ketikan
 
 // ============================
-// ELEMEN AUDIO
+// MEMBUAT BINTANG-BINTANG
 // ============================
-const bgMusic = document.getElementById('bgMusic');
-const musicControl = document.getElementById('music-control');
-const musicNotification = document.getElementById('musicNotification');
+function createStars() {
+    const starsContainer = document.getElementById('stars');
+    const starCount = 150; // Dikurangi untuk performa mobile
+    
+    for (let i = 0; i < starCount; i++) {
+        const star = document.createElement('div');
+        star.classList.add('star');
+        
+        // Posisi acak
+        const x = Math.random() * 100;
+        const y = Math.random() * 100;
+        
+        // Ukuran acak
+        const size = Math.random() * 2 + 1; // Ukuran lebih konsisten
+        
+        // Durasi animasi acak
+        const duration = 3 + Math.random() * 4;
+        const delay = Math.random() * 3;
+        
+        star.style.left = `${x}%`;
+        star.style.top = `${y}%`;
+        star.style.width = `${size}px`;
+        star.style.height = `${size}px`;
+        star.style.animationDuration = `${duration}s`;
+        star.style.animationDelay = `${delay}s`;
+        
+        starsContainer.appendChild(star);
+    }
+}
 
 // ============================
-// INISIALISASI MUSIK
+// MEMBUAT PARTIKEL HATI
 // ============================
-function initializeMusic() {
-    if (musicInitialized) return;
+function createHearts() {
+    const heartsContainer = document.getElementById('hearts');
+    const heartCount = 10; // Dikurangi untuk performa mobile
     
-    // Set volume
-    bgMusic.volume = 0.7;
-    
-    // Event listeners untuk audio
-    bgMusic.addEventListener('loadeddata', function() {
-        console.log('Musik siap diputar');
-    });
-    
-    bgMusic.addEventListener('error', function(e) {
-        console.error('Error loading audio:', e);
-        showMusicNotification('❌ Musik tidak dapat dimuat');
-    });
-    
-    bgMusic.addEventListener('canplaythrough', function() {
-        console.log('Musik dapat diputar sepenuhnya');
-    });
-    
-    musicInitialized = true;
+    for (let i = 0; i < heartCount; i++) {
+        const heart = document.createElement('div');
+        heart.classList.add('heart');
+        heart.innerHTML = '❤';
+        
+        // Posisi acak
+        const x = Math.random() * 100;
+        const delay = Math.random() * 6;
+        const duration = 5 + Math.random() * 3;
+        
+        heart.style.left = `${x}%`;
+        heart.style.animationDelay = `${delay}s`;
+        heart.style.animationDuration = `${duration}s`;
+        
+        heartsContainer.appendChild(heart);
+    }
 }
 
 // ============================
 // KONTROL MUSIK
 // ============================
-function toggleMusic() {
-    if (!musicInitialized) {
-        initializeMusic();
-    }
-    
+const musicControl = document.getElementById('music-control');
+let isMusicPlaying = false;
+
+musicControl.addEventListener('click', function() {
     if (isMusicPlaying) {
-        bgMusic.pause();
         musicControl.innerHTML = '<i>♪</i>';
-        isMusicPlaying = false;
     } else {
-        // Play music dengan user interaction
-        const playPromise = bgMusic.play();
-        
-        if (playPromise !== undefined) {
-            playPromise.then(() => {
-                // Musik berhasil diputar
-                musicControl.innerHTML = '<i>❚❚</i>';
-                isMusicPlaying = true;
-                hideMusicNotification();
-            }).catch(error => {
-                // Gagal memutar musik
-                console.error('Play failed:', error);
-                showMusicNotification('🔔 Ketuk layar untuk memutar musik');
-                musicControl.innerHTML = '<i>♪</i>';
-                isMusicPlaying = false;
-            });
-        }
+        musicControl.innerHTML = '<i>❚❚</i>';
     }
-}
+    isMusicPlaying = !isMusicPlaying;
+});
 
-function showMusicNotification(message) {
-    musicNotification.textContent = message;
-    musicNotification.style.display = 'block';
-    setTimeout(hideMusicNotification, 3000);
-}
-
-function hideMusicNotification() {
-    musicNotification.style.display = 'none';
-}
-
-// ============================
-// EVENT LISTENERS UNTUK MUSIK
-// ============================
-musicControl.addEventListener('click', toggleMusic);
-
-// Touch events untuk mobile
+// Event listener untuk touch devices
 musicControl.addEventListener('touchstart', function(e) {
     e.preventDefault();
     this.style.transform = 'scale(0.95)';
@@ -562,46 +566,28 @@ musicControl.addEventListener('touchstart', function(e) {
 musicControl.addEventListener('touchend', function(e) {
     e.preventDefault();
     this.style.transform = 'scale(1.1)';
-    toggleMusic();
-});
-
-// User interaction untuk unlock audio
-document.addEventListener('click', function() {
-    if (!musicInitialized) {
-        initializeMusic();
+    if (isMusicPlaying) {
+        musicControl.innerHTML = '<i>♪</i>';
+    } else {
+        musicControl.innerHTML = '<i>❚❚</i>';
     }
+    isMusicPlaying = !isMusicPlaying;
 });
 
-document.addEventListener('touchstart', function() {
-    if (!musicInitialized) {
-        initializeMusic();
-    }
-});
-
-// ============================
-// FUNGSI PUISI
-// ============================
 function startPoem() {
     document.getElementById("startScreen").style.display = "none";
-    
-    // Initialize musik saat mulai puisi
-    initializeMusic();
-    
-    // Coba memutar musik otomatis (mungkin gagal di mobile)
-    try {
-        bgMusic.play().then(() => {
-            musicControl.innerHTML = '<i>❚❚</i>';
-            isMusicPlaying = true;
-        }).catch(error => {
-            console.log('Autoplay blocked, waiting for user interaction');
-            showMusicNotification('🔔 Ketuk ikon musik untuk memutar');
-        });
-    } catch (error) {
-        console.log('Autoplay not supported');
-    }
-    
+
+    // 🎵 Mulai musik SoundCloud setelah tombol diklik
+    document.getElementById("sound").src =
+    "https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/nanda-aruna/andmesh-anugerah-terindah-official-music-video&auto_play=true&hide_related=true&show_comments=false&show_user=false&show_reposts=false&visual=false";
+
+    // Update progress dan indikator halaman
     updateProgress();
     showPage(pageNow);
+    
+    // Set musik sedang diputar
+    isMusicPlaying = true;
+    musicControl.innerHTML = '<i>❚❚</i>';
 }
 
 function showPage(num) {
@@ -619,6 +605,7 @@ function typeText(element, text) {
         charIndex++;
         setTimeout(() => typeText(element, text), speed);
     } else {
+        // setelah paragraf selesai → tampilkan tombol lanjut
         document.getElementById("nextBtn").style.display = "block";
     }
 }
@@ -632,6 +619,7 @@ function nextPage() {
         updateProgress();
         showPage(pageNow);
     } else {
+        // Jika sudah di halaman terakhir, tampilkan halaman penutup
         showEndScreen();
     }
 }
@@ -661,70 +649,34 @@ function updateProgress() {
 }
 
 // ============================
-// INISIALISASI
+// INISIALISASI DAN OPTIMASI MOBILE
 // ============================
-function createStars() {
-    const starsContainer = document.getElementById('stars');
-    const starCount = 150;
-    
-    for (let i = 0; i < starCount; i++) {
-        const star = document.createElement('div');
-        star.classList.add('star');
-        
-        const x = Math.random() * 100;
-        const y = Math.random() * 100;
-        const size = Math.random() * 2 + 1;
-        const duration = 3 + Math.random() * 4;
-        const delay = Math.random() * 3;
-        
-        star.style.left = `${x}%`;
-        star.style.top = `${y}%`;
-        star.style.width = `${size}px`;
-        star.style.height = `${size}px`;
-        star.style.animationDuration = `${duration}s`;
-        star.style.animationDelay = `${delay}s`;
-        
-        starsContainer.appendChild(star);
-    }
-}
-
-function createHearts() {
-    const heartsContainer = document.getElementById('hearts');
-    const heartCount = 10;
-    
-    for (let i = 0; i < heartCount; i++) {
-        const heart = document.createElement('div');
-        heart.classList.add('heart');
-        heart.innerHTML = '❤';
-        
-        const x = Math.random() * 100;
-        const delay = Math.random() * 6;
-        const duration = 5 + Math.random() * 3;
-        
-        heart.style.left = `${x}%`;
-        heart.style.animationDelay = `${delay}s`;
-        heart.style.animationDuration = `${duration}s`;
-        
-        heartsContainer.appendChild(heart);
-    }
-}
-
-// Initialize saat DOM ready
 document.addEventListener('DOMContentLoaded', function() {
     createStars();
     createHearts();
-    initializeMusic();
     
-    // Event untuk unlock audio context
-    document.body.addEventListener('click', function() {
-        if (bgMusic.paused && !isMusicPlaying) {
-            // Coba play musik saat user interaction pertama
-            bgMusic.play().then(() => {
-                bgMusic.pause();
-                musicControl.innerHTML = '<i>♪</i>';
-            }).catch(console.error);
+    // Mencegah zoom double tap di iOS
+    let lastTouchEnd = 0;
+    document.addEventListener('touchend', function (event) {
+        const now = (new Date()).getTime();
+        if (now - lastTouchEnd <= 300) {
+            event.preventDefault();
         }
+        lastTouchEnd = now;
+    }, false);
+    
+    // Mencegah context menu di mobile
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
     });
+});
+
+// Handle orientation change
+window.addEventListener('orientationchange', function() {
+    // Beri waktu untuk orientasi berubah
+    setTimeout(function() {
+        window.scrollTo(0, 0);
+    }, 100);
 });
 </script>
 
